@@ -1,0 +1,79 @@
+#include <RCSwitch.h>
+
+RCSwitch mySwitch = RCSwitch();
+
+String inputString = "";
+String nullString = "";
+
+void setup() {
+
+  Serial.begin(9600);
+  inputString.reserve(200);
+  mySwitch.enableTransmit(10);
+  
+}
+
+void loop() {
+  
+  if (inputString == "A") {
+    mySwitch.send("010101010100010101010001");
+    inputString=nullString; 
+  }
+  else if (inputString == "a") {
+    mySwitch.send("010101010100010101010100");
+    inputString=nullString; 
+  }
+  else if (inputString == "B") {
+    mySwitch.send("010101010101000101010001");
+    inputString=nullString; 
+  }
+  else if (inputString == "b") {
+    mySwitch.send("010101010101000101010100");
+    inputString=nullString; 
+  }
+  else if (inputString == "C") {
+    mySwitch.send("010101010101010001010001");
+    inputString=nullString; 
+  }
+  else if (inputString == "c") {
+    mySwitch.send("010101010101010001010100");
+    inputString=nullString; 
+  }
+  else if (inputString == "D") {
+    mySwitch.send("010101010101010100010001");
+    inputString=nullString; 
+  }
+  else if (inputString == "d") {
+    mySwitch.send("010101010101010100010100");
+    inputString=nullString; 
+  }
+  else if (inputString == "E") {
+    mySwitch.send("000101010100010101010001");
+    inputString=nullString; 
+  }
+  else if (inputString == "e") {
+    mySwitch.send("000101010100010101010100");
+    inputString=nullString; 
+  }
+  else if (inputString == "F") {
+    mySwitch.send("000101010101000101010001");
+    inputString=nullString; 
+  }
+  else if (inputString == "f") {
+    mySwitch.send("000101010101000101010100");
+    inputString=nullString; 
+  }
+  else {
+//    mySwitch.send(inputString);
+    inputString=nullString;
+  }
+
+}
+
+void serialEvent() {
+  while (Serial.available() > 0) {
+    char inChar = (char)Serial.read();
+    inputString += inChar;
+    if (inChar == '\n') break; 
+  }
+}
