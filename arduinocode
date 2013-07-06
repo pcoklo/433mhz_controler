@@ -1,80 +1,120 @@
+/*RTL-SDR, Arduino433 and OpenWRT links.
+
+
+RTL-SDR
+http://sdr.osmocom.org/trac/wiki/rtl-sdr
+RTL-433
+https://github.com/merbanan/rtl_433
+OpenWRT ser2net config
+http://ediy.com.my/index.php/blog/item/6-control-arduino-with-tp-link-tl-wr1043nd-router
+
+Arduino code:*/
+
 #include <RCSwitch.h>
 
 RCSwitch mySwitch = RCSwitch();
 
 String inputString = "";
 String nullString = "";
-
+int unlockPin = 10;
+boolean flag=0;
+int sjedalicaPin = 2;
 void setup() {
-
-  Serial.begin(9600);
-  inputString.reserve(200);
-  mySwitch.enableTransmit(12);
   
+  
+
+Serial.begin(9600);
+inputString.reserve(200);
+mySwitch.enableTransmit(12);
+
+pinMode(unlockPin, OUTPUT);
+pinMode(sjedalicaPin, INPUT_PULLUP);
+digitalWrite(unlockPin, LOW);
+
 }
 
 void loop() {
+  
+  if(sjedalicaPin==1 && flag==0){
+    flag=1;
+    mySwitch.send("010101010100010101010100");
+  }
+  
+  if(sjedalicaPin==0 && flag==1){
+    flag=0;
+    mySwitch.send("010101010100010101010001");
+  }
+    
+    
+  
+  
 if(Serial.available()>0)
 {
-  serialRead();
-  
-  if (inputString == "A") {
-    mySwitch.send("010101010100010101010001");
-    inputString=nullString;
-  }
-  else if (inputString == "a") {
-    mySwitch.send("010101010100010101010100");
-    inputString=nullString;
-  }
-  else if (inputString == "B") {
-    mySwitch.send("010101010101000101010001");
-    inputString=nullString;
-  }
-  else if (inputString == "b") {
-    mySwitch.send("010101010101000101010100");
-    inputString=nullString;
-  }
-  else if (inputString == "C") {
-    mySwitch.send("010101010101010001010001");
-    inputString=nullString;
-  }
-  else if (inputString == "c") {
-    mySwitch.send("010101010101010001010100");
-    inputString=nullString;
-  }
-  else if (inputString == "D") {
-    mySwitch.send("010101010101010100010001");
-    inputString=nullString;
-  }
-  else if (inputString == "d") {
-    mySwitch.send("010101010101010100010100");
-    inputString=nullString;
-  }
-  else if (inputString == "E") {
-    mySwitch.send("000101010100010101010001");
-    inputString=nullString;
-  }
-  else if (inputString == "e") {
-    mySwitch.send("000101010100010101010100");
-    inputString=nullString;
-  }
-  else if (inputString == "F") {
-    mySwitch.send("000101010101000101010001");
-    inputString=nullString;
-  }
-  else if (inputString == "f") {
-    mySwitch.send("000101010101000101010100");
-    inputString=nullString;
-  }
+serialRead();
+
+if (inputString == "A") {
+mySwitch.send("010101010100010101010001");
+inputString=nullString;
+}
+else if (inputString == "a") {
+mySwitch.send("010101010100010101010100");
+inputString=nullString;
+}
+else if (inputString == "B") {
+mySwitch.send("010101010101000101010001");
+inputString=nullString;
+}
+else if (inputString == "b") {
+mySwitch.send("010101010101000101010100");
+inputString=nullString;
+}
+else if (inputString == "C") {
+mySwitch.send("010101010101010001010001");
+inputString=nullString;
+}
+else if (inputString == "c") {
+mySwitch.send("010101010101010001010100");
+inputString=nullString;
+}
+else if (inputString == "D") {
+mySwitch.send("010101010101010100010001");
+inputString=nullString;
+}
+else if (inputString == "d") {
+mySwitch.send("010101010101010100010100");
+inputString=nullString;
+}
+else if (inputString == "E") {
+mySwitch.send("000101010100010101010001");
+inputString=nullString;
+}
+else if (inputString == "e") {
+mySwitch.send("000101010100010101010100");
+inputString=nullString;
+}
+else if (inputString == "F") {
+mySwitch.send("000101010101000101010001");
+inputString=nullString;
+}
+else if (inputString == "f") {
+mySwitch.send("000101010101000101010100");
+inputString=nullString;
+}
+else if (inputString == "K") {
+digitalWrite(unlockPin, HIGH);
+delay(1000);
+digitalWrite(unlockPin, LOW);
+inputString = nullString;
+}
 }
 }
 void serialRead() {
-  inputString = nullString;
-  delay(1);
-  do
-  {
-    char inChar = (char)Serial.read();
-    inputString += inChar;
-    delay(1);
-  } while(Serial.available()>0);
+inputString = nullString;
+delay(1);
+do
+{
+char inChar = (char)Serial.read();
+inputString += inChar;
+delay(1);
+} while(Serial.available()>0);
 }
